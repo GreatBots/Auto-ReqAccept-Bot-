@@ -2,6 +2,7 @@ from pyrogram import Client, filters
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 import pymongo
 import os
+import asyncio
 
 app = Client(
     "My-Bot",
