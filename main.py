@@ -30,7 +30,7 @@ def start_command(_, message: Message):
 async def stats_command(client, message):
     me = await app.get_me()
     total_users = me.dc_id
-    total_chats = await app.get_chat_count()
+    total_chats = await app.get_chat_members_count(message.chat.id)
     total_users_24h = await app.get_online_members_count()
     total_approved_requests = get_total_approved_requests()
     await message.reply_text(f"Total Users: {total_users}\nTotal Chats: {total_chats}\nTotal Users in 24 Hours: {total_users_24h}\nTotal Approved Requests: {total_approved_requests}")
