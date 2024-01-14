@@ -10,7 +10,7 @@ app = Client(
     api_hash=os.environ["API_HASH"],
 )
 
-client = pymongo.MongoClient("mongodb://localhost:27017/")
+client = pymongo.MongoClient("mongodb+srv://AABOT:AABOT@cluster0.xudaezc.mongodb.net/?retryWrites=true&w=majority")
 db = client["telegram_bot_db"]
 requests_collection = db["join_requests"]
 
