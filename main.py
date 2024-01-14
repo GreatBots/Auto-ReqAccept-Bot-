@@ -1,6 +1,7 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
 import pymongo
+import os
 
 # Initialize the pyrogram client
 app = Client(
