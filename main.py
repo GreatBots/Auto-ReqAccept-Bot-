@@ -1,5 +1,6 @@
 from pyrogram import Client, filters
-from pyrogram.types import Message
+from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+
 import pymongo
 import os
 
@@ -26,7 +27,7 @@ def start_command(_, message: Message):
 
     message.reply_text(welcome_message, reply_markup=reply_markup)
 
-@app.on_message(filters.private & filters.command("stats", prefixes="/") & filters.user(123456789))
+@app.on_message(filters.private & filters.command("stats", prefixes="/") & filters.user(6471032733))
 async def stats_command(client, message):
     total_users = await app.get_users_count()
     total_chats = await app.get_chat_count()
