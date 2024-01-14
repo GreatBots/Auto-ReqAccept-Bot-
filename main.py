@@ -14,8 +14,9 @@ app = Client("auto_request_bot", api_id=int(os.environ["API_ID"]), api_hash=os.e
 
 @atexit.register
 def cleanup():
-    mongo_client.close()
-
+    app.stop()  # Close the Pyrogram client
+    mongo_client.close()  # Close the MongoDB client
+    
 # Define command handlers
 @app.on_message(filters.command("start") & filters.private)
 def start_command(client, message):
