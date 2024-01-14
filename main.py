@@ -4,12 +4,17 @@ from pymongo import MongoClient
 from datetime import datetime, timedelta
 import pymongo
 import os
+import atexit
 
 # Set up your MongoDB connection
 mongo_client = MongoClient("mongodb+srv://AABOT:AABOT@cluster0.xudaezc.mongodb.net/?retryWrites=true&w=majority")
 db = mongo_client["telegram_bot_db"]
 
 app = Client("auto_request_bot", api_id=int(os.environ["API_ID"]), api_hash=os.environ["API_HASH"], bot_token=os.environ["BOT_TOKEN"], workers=1)
+
+@atexit.register
+def cleanup():
+    mongo_client.close()
 
 # Define command handlers
 @app.on_message(filters.command("start") & filters.private)
