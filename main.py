@@ -2,19 +2,15 @@ from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from pymongo import MongoClient
 from datetime import datetime, timedelta
-from motor.motor_asyncio import AsyncIOMotorClient
 import pymongo
 import os
 
-mongo_client = AsyncIOMotorClient("mongodb+srv://AABOT:AABOT@cluster0.xudaezc.mongodb.net/?retryWrites=true&w=majority")
+mongo_client = MongoClient("mongodb+srv://AABOT:AABOT@cluster0.xudaezc.mongodb.net/?retryWrites=true&w=majority")
 db = mongo_client["telegram_bot_db"]
 
 # Asynchronous Pyrogram client setup
 app = Client("auto_request_bot", api_id=int(os.environ["API_ID"]), api_hash=os.environ["API_HASH"], bot_token=os.environ["BOT_TOKEN"], workers=1)
 
-async def cleanup():
-    await app.stop()
-    mongo_client.close()
 
 # Define command handlers
 @app.on_message(filters.command("start") & filters.private)
@@ -59,18 +55,10 @@ def handle_group_join(client, message):
 
 # Define inline query handler
 @app.on_inline_query()
-async def handle_inline_query(client, inline_query):
+def handle_inline_query(client, inline_query):
     # Provide total users count inline
     total_users = db.users.count_documents({})
     result = f"Total Users: {total_users}"
     inline_query.answer([InlineKeyboardButton("Stats", callback_data="stats")], cache_time=1, results=[{"type": "article", "id": "1", "title": "Stats", "input_message_content": {"message_text": result}}])
 
-app.on_stop(cleanup)
-
-# Run the application asynchronously
-async def main():
-    await app.start()
-    await asyncio.gather(app.idle(), cleanup())
-
-if __name__ == "__main__":
-    asyncio.run(main())
+app.run()
