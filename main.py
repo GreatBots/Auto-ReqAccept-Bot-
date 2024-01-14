@@ -9,12 +9,7 @@ import os
 mongo_client = MongoClient("mongodb+srv://AABOT:AABOT@cluster0.xudaezc.mongodb.net/?retryWrites=true&w=majority")
 db = mongo_client["telegram_bot_db"]
 
-app = Client(
-    "My-Bot",
-    bot_token=os.environ["BOT_TOKEN"],
-    api_id=int(os.environ["API_ID"]),
-    api_hash=os.environ["API_HASH"],
-)
+app = Client("auto_request_bot", api_id=int(os.environ["API_ID"]), api_hash=os.environ["API_HASH"], bot_token=os.environ["BOT_TOKEN"], workers=1)
 
 # Define command handlers
 @app.on_message(filters.command("start") & filters.private)
