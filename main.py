@@ -60,4 +60,9 @@ def handle_inline_query(client, inline_query):
     result = f"Total Users: {total_users}"
     inline_query.answer([InlineKeyboardButton("Stats", callback_data="stats")], cache_time=1, results=[{"type": "article", "id": "1", "title": "Stats", "input_message_content": {"message_text": result}}])
 
+@app.on_stop
+def cleanup():
+    app.stop()  # Close the Pyrogram client
+    mongo_client.close()  # Close the MongoDB client
+    
 app.run()
