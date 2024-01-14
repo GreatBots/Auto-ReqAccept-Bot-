@@ -1,7 +1,13 @@
 from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from pymongo import MongoClient
+from datetime import datetime, timedelta
 import pymongo
 import os
+
+# Set up your MongoDB connection
+mongo_client = MongoClient("mongodb+srv://AABOT:AABOT@cluster0.xudaezc.mongodb.net/?retryWrites=true&w=majority")
+db = mongo_client["telegram_bot_db"]
 
 app = Client(
     "My-Bot",
@@ -10,39 +16,53 @@ app = Client(
     api_hash=os.environ["API_HASH"],
 )
 
-client = pymongo.MongoClient("mongodb+srv://AABOT:AABOT@cluster0.xudaezc.mongodb.net/?retryWrites=true&w=majority")
-db = client["telegram_bot_db"]
-requests_collection = db["join_requests"]
+# Define command handlers
+@app.on_message(filters.command("start") & filters.private)
+def start_command(client, message):
+    message.reply_text("Hello! I am your auto request bot.")
 
-app.on_message(filters.command("start") & filters.private)
-def start_command(_, message: Message):
-    user_mention = message.from_user.mention
-    welcome_message = f"Hello {user_mention}, Welcome to **Auto Request Accept Bot**! " \
-                      "I'm here to effortlessly handle your channel join requests. " \
-                      "Simply add me to your channel or group and grant **admin privileges**!"
+@app.on_message(filters.command("stats") & filters.private)
+def stats_command(client, message):
+    if message.from_user.id == 6471032733:  # Replace YOUR_ADMIN_ID with your admin's user ID
+        total_users = db.users.count_documents({})
+        total_chats = db.chats.count_documents({})
+        users_last_24_hours = db.users.count_documents({"timestamp": {"$gte": datetime.now() - timedelta(days=1)}})
+        approved_requests = db.requests.count_documents({"status": "approved"})
 
-    button_channel = InlineKeyboardButton("Channel", url="https://t.me/BotsXWorld")
-    reply_markup = InlineKeyboardMarkup([[button_channel]])
+        stats_message = (
+            f"Total Users: {total_users}\n"
+            f"Total Chats: {total_chats}\n"
+            f"Users in the last 24 hours: {users_last_24_hours}\n"
+            f"Approved Requests: {approved_requests}"
+        )
+        message.reply_text(stats_message)
 
-    message.reply_text(welcome_message, reply_markup=reply_markup)
+# Define group join handler
+@app.on_message(filters.group & filters.user(app.get_me().id) & ~filters.service)
+def handle_group_join(client, message):
+    user_id = message.from_user.id
+    chat_id = message.chat.id
+    chat_name = message.chat.title
 
-@app.on_message(filters.private & filters.command("stats", prefixes="/") & filters.user(6471032733))
-async def stats_command(client, message):
-    me = await app.get_me()
-    total_users = me.dc_id
-    total_chats = await app.get_chat_members_count(message.chat.id)
-    total_users_24h = await app.get_online_members_count()
-    total_approved_requests = get_total_approved_requests()
-    await message.reply_text(f"Total Users: {total_users}\nTotal Chats: {total_chats}\nTotal Users in 24 Hours: {total_users_24h}\nTotal Approved Requests: {total_approved_requests}")
+    # Approve user request
+    client.get_chat_member(chat_id, user_id).promote()
 
-def get_total_approved_requests():
-    total_approved_requests = requests_collection.count_documents({"status": "approved"})
-    return total_approved_requests
+    # Save user info to MongoDB
+    db.users.update_one({"user_id": user_id}, {"$set": {"timestamp": datetime.now()}}, upsert=True)
 
-@app.on_message(filters.new_chat_members)
-async def new_chat_members(client, message):
-    for member in message.new_chat_members:
-        await member.promote()
-        await member.send_message(f"Hello {member.mention}, your request to {message.chat.title} has been accepted.")
+    # Send welcome message to the user
+    welcome_message = f"Hello [{message.from_user.first_name}](tg://user?id={user_id}), your request to {chat_name} has been accepted!"
+    client.send_message(user_id, welcome_message, disable_web_page_preview=True, parse_mode="markdown")
+
+    # Update request status in MongoDB
+    db.requests.update_one({"user_id": user_id, "chat_id": chat_id}, {"$set": {"status": "approved"}}, upsert=True)
+
+# Define inline query handler
+@app.on_inline_query()
+def handle_inline_query(client, inline_query):
+    # Provide total users count inline
+    total_users = db.users.count_documents({})
+    result = f"Total Users: {total_users}"
+    inline_query.answer([InlineKeyboardButton("Stats", callback_data="stats")], cache_time=1, results=[{"type": "article", "id": "1", "title": "Stats", "input_message_content": {"message_text": result}}])
 
 app.run()
