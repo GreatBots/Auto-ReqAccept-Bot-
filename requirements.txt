@@ -1,5 +1,4 @@
 pyrogram
 tgcrypto
 pymongo
-gunicorn==20.1.0
-uvicorn==0.15.0
+motor
