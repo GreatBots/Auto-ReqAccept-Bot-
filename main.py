@@ -1,8 +1,18 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
+import pymongo
 
 # Initialize the pyrogram client
-app = Client("my_bot")
+app = Client(
+    "My-Bot",
+    bot_token=os.environ["BOT_TOKEN"],
+    api_id=int(os.environ["API_ID"]),
+    api_hash=os.environ["API_HASH"],
+)
+
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+db = client["telegram_bot_db"]
+requests_collection = db["join_requests"]
 
 app.on_message(filters.command("start") & filters.private)
 def start_command(_, message: Message):
