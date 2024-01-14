@@ -1,3 +1,4 @@
 pyrogram==1.2.9
+async-lru==2.3
 tgcrypto
 pymongo
