@@ -28,7 +28,8 @@ def start_command(_, message: Message):
 
 @app.on_message(filters.private & filters.command("stats", prefixes="/") & filters.user(6471032733))
 async def stats_command(client, message):
-    total_users = await app.get_users_count()
+    me = await app.get_me()
+    total_users = me.members_count
     total_chats = await app.get_chat_count()
     total_users_24h = await app.get_online_members_count()
     total_approved_requests = get_total_approved_requests()
