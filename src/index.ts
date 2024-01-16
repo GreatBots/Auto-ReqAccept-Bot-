@@ -1,5 +1,6 @@
 import { Grammy, session, Scenes, Markup, Context, MessageContext } from 'grammy';
-import { MongoClient } from 'mongodb';
+import { Context, Grammy } from 'grammy';
+import { MongoClient, MongoClientOptions } from 'mongodb';
 
 // Set up MongoDB connection
 const mongoClient = new MongoClient('mongodb+srv://bot:bot@cluster0.fi5r1kg.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
