@@ -1,4 +1,4 @@
-import { Context, Grammy } from 'grammy';
+import { Context, Grammy } from 'grammy/out';
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
 const mongoClient = new MongoClient('mongodb+srv://bot:bot@cluster0.fi5r1kg.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true } as MongoClientOptions);
@@ -19,7 +19,7 @@ bot.command('start', async (ctx: Context) => {
 
 // Stats command for admin
 bot.command('stats', async (ctx: Context) => {
-  const YOUR_ADMIN_ID = 1496092965; // Replace with your admin's user ID
+  const YOUR_ADMIN_ID = 123456789; // Replace with your admin's user ID
   if (ctx.from?.id === YOUR_ADMIN_ID) {
     const totalUsers = await db.collection('users').countDocuments({});
     const totalChats = await db.collection('chats').countDocuments({});
