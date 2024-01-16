@@ -1,0 +1,13 @@
+{
+  "name": "Auto-ReqAccept-Bot",
+  "version": "1.0.0",
+  "description": "Your Telegram Bot",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "grammy": "^2.3.2",
+    "mongodb": "^4.1.0"
+  }
+}
