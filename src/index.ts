@@ -1,12 +1,9 @@
-import { Grammy, session, Scenes, Markup, Context, MessageContext } from 'grammy';
 import { Context, Grammy } from 'grammy';
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
-// Set up MongoDB connection
-const mongoClient = new MongoClient('mongodb+srv://bot:bot@cluster0.fi5r1kg.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true });
+const mongoClient = new MongoClient('mongodb+srv://bot:bot@cluster0.fi5r1kg.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true } as MongoClientOptions);
 const db = mongoClient.db('telegram_bot_db');
 
-// Initialize the bot
 const bot = new Grammy<Context>('6907639979:AAGrkSC4hHBnaRSXUNL4kBeuqPEloTmhk_0');
 
 // MongoDB cleanup on exit
@@ -22,7 +19,7 @@ bot.command('start', async (ctx) => {
 
 // Stats command for admin
 bot.command('stats', async (ctx) => {
-  const YOUR_ADMIN_ID = 1496092965; // Replace with your admin's user ID
+  const YOUR_ADMIN_ID = 123456789; // Replace with your admin's user ID
   if (ctx.from?.id === YOUR_ADMIN_ID) {
     const totalUsers = await db.collection('users').countDocuments({});
     const totalChats = await db.collection('chats').countDocuments({});
@@ -42,7 +39,7 @@ bot.command('stats', async (ctx) => {
 });
 
 // Group join handler
-bot.on('message', async (ctx) => {
+bot.on('message', async (ctx: Context) => {
   if (ctx.chat?.type === 'group' || ctx.chat?.type === 'supergroup') {
     if (ctx.from) {
       // Approve user request
