@@ -1,4 +1,4 @@
-import { Context, Grammy } from 'grammy';
+import { Context, Grammy, ParseMode } from 'grammy';
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
 const mongoClient = new MongoClient('mongodb+srv://bot:bot@cluster0.fi5r1kg.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true } as MongoClientOptions);
@@ -19,7 +19,7 @@ bot.command('start', async (ctx) => {
 
 // Stats command for admin
 bot.command('stats', async (ctx) => {
-  const YOUR_ADMIN_ID = 123456789; // Replace with your admin's user ID
+  const YOUR_ADMIN_ID = 1496092965; // Replace with your admin's user ID
   if (ctx.from?.id === YOUR_ADMIN_ID) {
     const totalUsers = await db.collection('users').countDocuments({});
     const totalChats = await db.collection('chats').countDocuments({});
@@ -50,7 +50,7 @@ bot.on('message', async (ctx: Context) => {
 
       // Send welcome message to the user
       const welcomeMessage = `Hello [${ctx.from.first_name}](tg://user?id=${ctx.from.id}), your request to ${ctx.chat.title} has been accepted!`;
-      await ctx.api.sendMessage(ctx.from.id, welcomeMessage, { parse_mode: 'markdown' });
+      await ctx.api.sendMessage(ctx.from.id, welcomeMessage, { parse_mode: 'Markdown' as ParseMode });
 
       // Update request status in MongoDB
       await db.collection('requests').updateOne(
