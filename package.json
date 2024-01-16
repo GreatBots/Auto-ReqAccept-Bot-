@@ -1,13 +1,31 @@
 {
-  "name": "Auto-ReqAccept-Bot",
+  "name": "auto-accept-bpt",
   "version": "1.0.0",
-  "description": "Your Telegram Bot",
-  "main": "main.js",
+  "description": "Your Telegram Bot Description",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "tsc && node dist/index.js",
+    "build": "tsc"
+  },
+  "engines": {
+    "node": "14.x"
   },
   "dependencies": {
-    "grammy": "^2.3.1",
-    "mongodb": "^4.1.0"
-  }
+    "grammy": "^4.3.0",
+    "mongodb": "^4.0.0",
+    // Add other dependencies if needed
+  },
+  "devDependencies": {
+    "typescript": "^4.5.4",
+    "@types/node": "^16.11.16"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "typescript",
+    "heroku"
+  ],
+  "author": "Vivek",
+  "license": "MIT",
+  "private": true
 }
