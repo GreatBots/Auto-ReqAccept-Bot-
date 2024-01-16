@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import pymongo
 import os
 
-mongo_client = MongoClient("mongodb+srv://AABOT:AABOT@cluster0.xudaezc.mongodb.net/?retryWrites=true&w=majority")
+mongo_client = MongoClient("mongodb+srv://bot:bot@cluster0.fi5r1kg.mongodb.net/?retryWrites=true&w=majority")
 db = mongo_client["telegram_bot_db"]
 
 # Asynchronous Pyrogram client setup
