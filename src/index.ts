@@ -1,7 +1,7 @@
-import { Context, Grammy } from 'grammy';
+import { Context, Bot } from 'grammy';
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
-const bot = new Grammy<Context>('6907639979:AAGrkSC4hHBnaRSXUNL4kBeuqPEloTmhk_0');
+const bot = new Bot<Context>('6907639979:AAGrkSC4hHBnaRSXUNL4kBeuqPEloTmhk_0');
 const mongoUri = 'mongodb+srv://bot:bot@cluster0.fi5r1kg.mongodb.net/?retryWrites=true&w=majority';
 
 const mongoClient = new MongoClient(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true } as MongoClientOptions);
