@@ -1,10 +1,10 @@
-import { Composer, Context, Grammy, Markup } from 'grammy';
+import { Composer, Context, Bot, Markup } from 'grammy';
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
 const mongoClient = new MongoClient('mongodb+srv://bot:bot@cluster0.fi5r1kg.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true } as MongoClientOptions);
 const db = mongoClient.db('telegram_bot_db');
 
-const bot = new Grammy<Context>('6907639979:AAGrkSC4hHBnaRSXUNL4kBeuqPEloTmhk_0');
+const bot = new Bot<Context>('6907639979:AAGrkSC4hHBnaRSXUNL4kBeuqPEloTmhk_0');
 
 // MongoDB cleanup on exit
 const cleanup = async () => {
