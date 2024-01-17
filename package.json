@@ -2,9 +2,9 @@
   "name": "auto-accept-bpt",
   "version": "1.0.0",
   "description": "Your Telegram Bot Description",
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "node dist/index.js",
     "build": "tsc"
   },
   "engines": {
