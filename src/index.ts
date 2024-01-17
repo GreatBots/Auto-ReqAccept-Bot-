@@ -1,4 +1,4 @@
-import { Context, Grammy } from 'grammy';
+import { Context, Grammy, ParseMode } from 'grammy';
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
 const mongoClient = new MongoClient('mongodb+srv://bot:bot@cluster0.fi5r1kg.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true } as MongoClientOptions);
@@ -7,10 +7,18 @@ const db = mongoClient.db('telegram_bot_db');
 const bot = new Grammy<Context>('6907639979:AAGrkSC4hHBnaRSXUNL4kBeuqPEloTmhk_0');
 
 // MongoDB cleanup on exit
-process.on('SIGINT', async () => {
-  await mongoClient.close();
-  process.exit();
-});
+const cleanup = async () => {
+  try {
+    await mongoClient.close();
+  } catch (error) {
+    console.error('Error during MongoDB cleanup:', error);
+  } finally {
+    process.exit();
+  }
+};
+
+process.on('SIGTERM', cleanup);
+process.on('SIGINT', cleanup);
 
 // Start command
 bot.command('start', async (ctx: Context) => {
@@ -50,7 +58,7 @@ bot.on('message', async (ctx: Context) => {
 
       // Send welcome message to the user
       const welcomeMessage = `Hello [${ctx.from.first_name}](tg://user?id=${ctx.from.id}), your request to ${ctx.chat.title} has been accepted!`;
-      await ctx.api.sendMessage(ctx.from.id, welcomeMessage, { parse_mode: 'Markdown' as 'Markdown' });
+      await ctx.api.sendMessage(ctx.from.id, welcomeMessage, { parse_mode: 'Markdown' as ParseMode });
 
       // Update request status in MongoDB
       await db.collection('requests').updateOne(
